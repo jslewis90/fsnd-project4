@@ -1,0 +1,17 @@
+* {
+  /* border: 1px red solid !important; */
+  font-family: 'Trebuchet MS', sans-serif;
+}
+body { background-color: #787878; }
+h1 { color: #5bc0de; }
+textarea.form-control  { resize: vertical; }
+hr { border-top: 1px solid #cecece; }
+.img-sm > img { height: 150px; }
+.thumbnail > img { max-height: 220px;}
+.navbarFix { margin-top:60px; }
+.panel-gray { background: #c5ccd3; }
+.text-bold { font-weight: bold; }
+.float-right { float: right; }
+.item-title { font-style: italic; text-decoration: underline; }
+.img-icon { height: 22px; }
+.img-avatar { height: 35px; }
