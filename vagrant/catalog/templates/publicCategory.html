@@ -1,0 +1,85 @@
+{% extends 'main.html' %}
+{% block menu %}
+{% include 'menu.html' %}
+{% endblock %}
+{% block content %}
+<div class='row'>
+  <div class='col-md-12'>
+    <h1 class='text-center'>{{category.name}}</h1>
+  </div>
+  <div class='col-sm-6 col-md-4 col-lg-offset-1 col-lg-3'>
+    <div class='panel panel-primary panel-gray'>
+      <div class='panel-heading'>
+        <h3 class='panel-title text-center text-bold'>Categories</h3>
+      </div>
+      <div class='panel-body'>
+        <dl>
+          {% if categories.count() < 1 %}
+          <dt>You currently have no categories.</dt>
+          {% endif %}
+          {% for category in categories %}
+            <dt>
+              <a href='{{url_for('showCategory', category_name = category.name) }}'>
+                {{category.name}}
+              </a>
+            </dt>
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class='col-sm-6 col-md-8 col-lg-7'>
+    <div class='panel panel-info panel-gray'>
+      <div class='panel-heading'>
+        <div class="row">
+          <div class="col-xs-2">
+            <img class="img-avatar img-rounded" src="{{ creator.picture }}" />
+          </div>
+          <div class="col-xs-8 text-center">
+            <h3 class='panel-title text-bold'>{{category.name}}: {{items.count()}} Item(s)</h3>
+            <strong>Created by:</strong> {{ creator.name }}
+          </div>
+        </div>
+      </div>
+      <div class='panel-body'>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class='row'>
+            <div class='col-md-offset-2 col-md-8'>
+            {% for message in messages %}
+              <div class='alert alert-success alert-dismissable text-center' role='alert'>
+                <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
+                </button>
+                <strong>{{ message }}</strong>
+              </div>
+            {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        {% endwith %}
+        {% if items.count() < 1 %}
+          <div class='col-xs-12'>
+            <p class='text-center'>You currently have no items.</p>
+          </div>
+        {% endif %}
+        {% for item in items %}
+        <div class='col-sm-6 col-md-3'>
+          <figure>
+            <a href='{{url_for('showItem', category_name = category.name, item_id=item.id) }}' class='thumbnail img-sm'>
+              <img src='{{item.picture}}' alt='{{item.title}}'>
+            </a>
+            <div class='caption text-center'>
+              <a href='{{url_for('showItem', category_name = category.name, item_id=item.id) }}'>
+                <h5 class='text-bold'>{{item.title}}</h5>
+              </a>
+            </div>
+          </figure>
+        </div>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

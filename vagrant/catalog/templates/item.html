@@ -1,0 +1,55 @@
+{% extends 'main.html' %}
+{% block menu %}
+{% include 'menu.html' %}
+{% endblock %}
+{% block content %}
+<div class='row'>
+  <div class='col-md-12'>
+    <h1 class='text-center'>Item Details</h1>
+  </div>
+  <div class='col-md-12 col-lg-offset-1 col-lg-10'>
+    <div class='panel panel-info panel-gray'>
+      <div class="panel-heading">
+         <div class="row">
+          <div class="col-xs-2">
+            <img class="img-avatar img-rounded" src="{{ creator.picture }}" />
+          </div>
+          <div class="col-xs-8 text-center">
+            <h3 class='panel-title text-bold'>{{item.title}}</h3>
+            <strong>Created by:</strong> {{ creator.name }}
+          </div>
+        </div>
+      </div>
+      <div class='panel-body'>
+        <div class='col-md-12'>
+          <figure class='thumbnail'>
+            <img src='{{item.picture}}' alt='{{item.title}}'>
+            <div class='caption'>           
+              <p class='text-center'>{{item.description}}</p>
+            </div>
+          </figure>
+        </div>
+        {% if creator.email == login['email'] %} 
+        <div class='col-md-offset-8 col-md-2'>
+          <a href='{{url_for('editItem', category_name = category.name, item_id = item.id) }}'
+            class='btn btn-info btn-block'>Edit</a>
+          <a href='{{url_for('deleteItem', category_name = category.name, item_id = item.id) }}'
+            class='btn btn-danger btn-block hidden-md hidden-lg'>Delete</a>
+        </div>
+        <div class='col-md-2 visible-md visible-lg'>
+          <a href='{{url_for('deleteItem', category_name = category.name, item_id = item.id) }}'
+            class='btn btn-danger btn-block'>Delete</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <ul class='pager'>
+      <li class='previous'>
+        <a href='{{url_for('showCategory', category_name = category.name) }}'>
+          &larr; Back to {{category.name}}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="uft-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/app.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery-2.2.4.min.js') }}"></script>
+    <script src="https://use.fontawesome.com/0dabff40cc.js"></script>    
+    {% block head %}
+    {% endblock %}
+  </head>
+  <body>
+    {% block menu %}
+    {% endblock %}
+    <div class="container-fluid navbarFix">
+			{% block content %}
+			{% endblock %}
+		</div>    
+    <script async src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  </body>
+</html>

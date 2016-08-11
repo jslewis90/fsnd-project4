@@ -1,0 +1,147 @@
+{% extends 'main.html' %}
+{% block head %}
+<!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+<script src="https://use.fontawesome.com/0dabff40cc.js"></script>
+<style>
+  .btn[disabled] {
+    cursor: default;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10">
+    <div class="panel panel-primary">
+      <div class="panel-heading text-center">
+        <h1 class="panel-title">Login</h1>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+						<div class="col-sm-offset-2 col-sm-4">
+              <div class="btn-group" id="googleBtn">
+                <a class="btn btn-danger btn-sm" disabled>
+                  <i class="fa fa-google" aria-hidden="true" style="font-size:12px"></i>
+                </a>
+                <span class="btn btn-danger btn-sm g-signin"
+                  data-scope="openid email"
+                  data-clientid="775417544556-kimqjp7st3605ptilqpqloj22gfdh4s8.apps.googleusercontent.com"
+                  data-redirecturi="postmessage"
+                  data-accesstype="offline"
+                  data-cookiepolicy="single_host_origin"
+                  data-callback="signInCallback"
+                  data-approvalprompt="force">
+                  Login with Google
+                  &nbsp;&nbsp;
+                </span>
+              </div>
+            </div>            
+          </div>
+          <div class="form-group">
+						<div class="col-sm-offset-2 col-sm-4">
+              <div class="btn-group" id="facebookBtn">
+                <a class="btn btn-primary btn-sm" disabled>
+                  <i class="fa fa-facebook" aria-hidden="true" style="font-size:15px"></i>
+                </a>                
+                <a onclick="FacebookLogin()" class="btn btn-primary btn-sm">
+                  Login with Facebook
+                </a>
+              </div>
+            </div>
+          </div>          
+          <div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<p class="form-control-static" id="result"></p>
+						</div>
+					</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function signInCallback(authResult) {
+  if (authResult['code']) {
+    // Hide the sign-in button now that the user is authorized
+    $('#signinButton').attr('style', 'display: none');
+    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+    $.ajax({
+      type: 'POST',
+      url: '/gconnect?state={{STATE}}',
+      processData: false,
+      data: authResult['code'],
+      contentType: 'application/octet-stream; charset=utf-8',
+      success: function(result) {
+        // Handle or verify the server response if necessary.
+        if (result) {
+          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+         setTimeout(function() {
+          window.location.href = "/catalog";
+         }, 4000);
+          
+      } else if (authResult['error']) {
+    console.log('There was an error: ' + authResult['error']);
+  } else {
+        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+         }
+      }
+      
+  }); } }
+</script>
+<!--END GOOGLE PLUS SIGN IN -->
+
+<!--FACEBOOK SIGN IN -->
+<script>
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '621190414722231',
+    cookie     : true,  // enable cookies to allow the server to access 
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.4' // use version 2.2
+  });
+  };
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function FacebookLogin() {
+    FB.login(function(response) {
+      // handle the response
+      var access_token = FB.getAuthResponse()['accessToken'];
+      console.log(access_token)
+      console.log('Welcome!  Fetching your information.... ');
+      FB.api('/me', function(response) {
+        console.log('Successful login for: ' + response.name);
+        $.ajax({
+          type: 'POST',
+          url: '/fbconnect?state={{STATE}}',
+          processData: false,
+          data: access_token,
+          contentType: 'application/octet-stream; charset=utf-8',
+          success: function(result) {
+            // Handle or verify the server response if necessary.
+            if (result) {
+              $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+              setTimeout(function() {
+                window.location.href = "/catalog";
+              }, 4000);
+            } else {
+              $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+            }
+          }
+        });
+      });
+    }, {scope: 'public_profile,email'});    
+  };
+</script>
+<!--END FACEBOOK SIGN IN -->
+{% endblock %}

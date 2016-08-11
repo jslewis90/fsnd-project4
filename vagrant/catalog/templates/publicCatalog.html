@@ -1,0 +1,83 @@
+{% extends "main.html" %}
+{% block menu %}
+{% include "menu.html" %}
+{% endblock %}
+{% block content %}
+<div class='row'>
+  <div class='col-md-12'>
+    <h1 class='text-center'>Catalog</h1>
+  </div>
+  <div class='col-sm-6 col-md-4 col-lg-offset-1 col-lg-3'>
+    <div class='panel panel-primary panel-gray'>
+      <div class='panel-heading'>
+        <h3 class='panel-title text-center text-bold'>Categories</h3>
+      </div>
+      <div class='panel-body'>
+        <dl>
+          {% if categories.count() < 1 %}
+          <dt>You currently have no categories.</dt>
+          {% endif %}
+          {% for category in categories %}
+            <dt>
+              <a href='{{url_for('showCategory', category_name = category.name) }}'>
+                {{category.name}}
+              </a>
+            </dt>
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class='col-sm-6 col-md-8 col-lg-7'>
+    <div class='panel panel-info panel-gray'>
+      <div class='panel-heading'>
+        <h3 class='panel-title text-center text-bold'>Latest Items</h3>
+      </div>
+      <div class='panel-body'>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class='row'>
+            <div class='col-md-offset-2 col-md-8'>
+            {% for message in messages %}
+              <div class='alert alert-success alert-dismissable text-center' role='alert'>
+                <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
+                </button>
+                <strong>{{ message }}</strong>
+              </div>
+            {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        {% endwith %}
+        {% if items.count() < 1 %}
+          <dl>
+            <dt>You currently have no items.</dt>
+          </dl>
+        {% endif %}
+        {% for item in items %}
+          {% for category in categories %}
+            {% if category.id == item.cat_id %}
+              <div class='col-sm-6 col-md-3'>
+                <figure>
+                  <a href='{{url_for('showItem', category_name = category.name, item_id=item.id) }}' class='thumbnail img-sm'>
+                    <img src='{{item.picture}}' alt='{{item.title}}'>
+                  </a>
+                  <div class='caption text-center'>
+                    <a href='{{url_for('showItem', category_name = category.name, item_id=item.id) }}'>
+                      <h5 class='text-bold'>{{item.title}} <span class="h6">({{category.name}})</span></h5>
+                      {% if item.title|length < 13 %}
+                        <br>
+                      {% endif %}
+                    </a>                    
+                  </div>
+                </figure>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

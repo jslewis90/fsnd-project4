@@ -1,0 +1,105 @@
+{% extends 'main.html' %}
+{% block menu %}
+{% include 'menu.html' %}
+{% endblock %}
+{% block content %}
+<div class='row'>
+  <div class='col-md-12'>
+    <h1 class='text-center'>New Item</h1>
+  </div>
+  <div class='col-md-12 col-lg-offset-1 col-lg-10'>
+    <div class='panel panel-default panel-gray'>
+      <div class='panel-body'>
+        <div class='col-sm-12'>
+          <form class='form-horizontal' action='#' method='post'>
+            <div class='form-group'>
+              <label for='title' class='col-sm-2 control-label'>Title</label>
+              <div class='col-sm-10'>
+                <input type='text' class='form-control' name='title'
+                  placeholder='Item Name' value='{{title}}' required>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='description' class='col-sm-2 control-label'>Description</label>
+              <div class='col-sm-10'>
+                <textarea class='form-control' name='description'
+                  placeholder='Item Description' required>{{description}}</textarea>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='picture' class='col-sm-2 control-label'>Picture URL</label>
+              <div class='col-sm-10'>
+                <input type='text' class='form-control picture' name='picture'
+                  placeholder='Picture URL' value='{{picture}}'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='picture' class='col-sm-2 control-label'>Preview</label>
+              <div class='col-sm-4 img-sm'>
+                <img class='form-control img-thumbnail img-responsive' src='' alt='Picture Preview' />
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='category' class='col-sm-2 control-label'>Category</label>
+              <div class='col-sm-10'>
+                <select class='form-control' name='category'>
+                  {% for category in categories %}
+                    {% if category.id == currentCategory.id %}
+                      <option value='{{category.id}}' selected>{{category.name}}</option>
+                    {% else %}
+                      <option value='{{category.id}}'>{{category.name}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group hidden-md hidden-lg">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type='submit' class='btn btn-success btn-block'>Add Item</button>
+                {% if currentCategory.id %}
+                  <a href='{{url_for('showCategory', category_name = currentCategory.name) }}'
+                    class='btn btn-default btn-block'>
+                    Cancel
+                  </a>
+                {% else %}
+                  <a href='{{url_for('showCatalog') }}' class='btn btn-default btn-block'>
+                    Cancel
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group visible-md visible-lg">
+              <div class="col-sm-offset-2 col-sm-2">
+                <button type='submit' class='btn btn-success btn-block'>Add Item</button>
+              </div>
+              <div class="col-sm-2">
+                {% if currentCategory.id %}
+                  <a href='{{url_for('showCategory', category_name = currentCategory.name) }}'
+                    class='btn btn-default btn-block'>
+                    Cancel
+                  </a>
+                {% else %}
+                  <a href='{{url_for('showCatalog') }}' class='btn btn-default btn-block'>
+                    Cancel
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$( '.picture' ).change(function() {
+  newPic = $('.picture').val();
+
+  if (newPic) {
+    $('.img-thumbnail').attr('src', newPic);
+  } else {
+    $('.img-thumbnail').attr('src', '');
+  }
+});
+</script>
+{% endblock %}
